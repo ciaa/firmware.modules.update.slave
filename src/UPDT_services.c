@@ -176,7 +176,7 @@ int32_t UPDT_servicesStart(
    /* if verified */
    /* if ... */
       /* store the new configuration */
-      UPDT_configStore();
+      UPDT_configWrite();
 
    /* delete storage instance */
    UPDT_storageClear();

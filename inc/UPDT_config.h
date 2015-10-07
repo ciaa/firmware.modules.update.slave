@@ -145,7 +145,7 @@ uint32_t UPDT_configSet(const uint8_t *config, size_t size);
  ** Saves the current configuration in the storage device.
  ** \return Returns 0 on success, non-zero on error.
  **/
-int32_t UPDT_configStore(void);
+int32_t UPDT_configWrite(void);
 
 /** \brief Formats a response payload.
  **

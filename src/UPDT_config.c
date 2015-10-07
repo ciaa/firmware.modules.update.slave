@@ -243,7 +243,7 @@ uint32_t UPDT_configSet(const uint8_t *config, size_t size)
 
 
 
-int32_t UPDT_configStore(void)
+int32_t UPDT_configWrite(void)
 {
    int32_t ret = -1;
    ciaaPOSIX_assert(UPDT_config_fd >= 0);
