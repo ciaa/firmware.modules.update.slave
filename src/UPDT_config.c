@@ -81,7 +81,8 @@ typedef struct
    uint32_t application_version;
    uint32_t vendor_id;
    uint32_t model_id;
-   uint64_t unique_id;
+   uint32_t unique_id_low;
+   uint32_t unique_id_high;
    uint32_t data_size;
 } UPDT_configType;
 /*==================[internal data declaration]==============================*/
@@ -122,9 +123,14 @@ void UPDT_configParse(const uint8_t *payload, size_t size, UPDT_configType *info
    word = UPDT_utilsNtohl(*(ptr + 3));
    info->vendor_id = 0xFFu & (word >> 24);
    info->model_id = 0xFFFFFFu & (word);
-
-   info->unique_id = UPDT_utilsNtohll(*(const uint64_t *) (ptr + 4));
-
+   
+   #if CIAAPLATFORM_BIGENDIAN == 0
+   info->unique_id_low = UPDT_utilsNtohl(*(const uint32_t *) (ptr + 4));
+   info->unique_id_high = UPDT_utilsNtohl(*(const uint32_t *) (ptr + 5));
+   #else
+   info->unique_id_high = UPDT_utilsNtohl(*(const uint32_t *) (ptr + 4));
+   info->unique_id_low = UPDT_utilsNtohl(*(const uint32_t *) (ptr + 5));
+   #endif
    info->data_size = UPDT_utilsNtohl(*(ptr + 6));
 }
 
@@ -133,7 +139,7 @@ void UPDT_configParse(const uint8_t *payload, size_t size, UPDT_configType *info
  ** \param data_size is the number of elements that will have the buffer
  ** \param info is a variable of the type structure used to assemble the buffer
  **/
-static void UPDT_configFormat (uint8_t *config_buffer,size_t data_size, UPDT_configType *info)
+static void UPDT_configFormat (uint8_t *config_buffer,size_t data_size, UPDT_configType *type)
 {
    ciaaPOSIX_assert(data_size == 32);
    /*Set of the field "reserved1" in the buffer*/
@@ -162,23 +168,23 @@ static void UPDT_configFormat (uint8_t *config_buffer,size_t data_size, UPDT_con
    config_buffer[15] = type->model_id;
    /*Set of the field "unique_id" in the buffer*/
    #if CIAAPLATFORM_BIGENDIAN == 0
-   config_buffer[16] = (type->unique_id_L) >> 24;
-   config_buffer[17] = (type->unique_id_L) >> 16;
-   config_buffer[18] = (type->unique_id_L) >> 8;
-   config_buffer[19] =  type->unique_id_L;
-   config_buffer[20] = (type->unique_id_H) >> 24;
-   config_buffer[21] = (type->unique_id_H) >> 16;
-   config_buffer[22] = (type->unique_id_H) >> 8;
-   config_buffer[23] =  type->unique_id_H;
+   config_buffer[16] = (type->unique_id_low) >> 24;
+   config_buffer[17] = (type->unique_id_low) >> 16;
+   config_buffer[18] = (type->unique_id_low) >> 8;
+   config_buffer[19] =  type->unique_id_low;
+   config_buffer[20] = (type->unique_id_high) >> 24;
+   config_buffer[21] = (type->unique_id_high) >> 16;
+   config_buffer[22] = (type->unique_id_high) >> 8;
+   config_buffer[23] =  type->unique_id_high;
    #else
-   config_buffer[16] = (type->unique_id_H) >> 24;
-   config_buffer[17] = (type->unique_id_H) >> 16;
-   config_buffer[18] = (type->unique_id_H) >> 8;
-   config_buffer[19] =  type->unique_id_H;
-   config_buffer[20] = (type->unique_id_L) >> 24;
-   config_buffer[21] = (type->unique_id_L) >> 16;
-   config_buffer[22] = (type->unique_id_L) >> 8;
-   config_buffer[23] =  type->unique_id_L;
+   config_buffer[16] = (type->unique_id_high) >> 24;
+   config_buffer[17] = (type->unique_id_high) >> 16;
+   config_buffer[18] = (type->unique_id_high) >> 8;
+   config_buffer[19] =  type->unique_id_high;
+   config_buffer[20] = (type->unique_id_low) >> 24;
+   config_buffer[21] = (type->unique_id_low) >> 16;
+   config_buffer[22] = (type->unique_id_low) >> 8;
+   config_buffer[23] =  type->unique_id_low;
    #endif // CIAAPLATFORM_BIGENDIAN
    /*Set of the field "data_size" in the buffer*/
    config_buffer[24] = (type->data_size) >> 24;
@@ -232,7 +238,7 @@ uint32_t UPDT_configSet(const uint8_t *config, size_t size)
          UPDT_config_flags |= UPDT_CONFIG_ERROR_MODEL_ID;
       }
 
-      if (UPDT_config_old.unique_id != UPDT_config_new.unique_id)
+      if (UPDT_config_old.unique_id_low != UPDT_config_new.unique_id_low  || UPDT_config_old.unique_id_high != UPDT_config_new.unique_id_high )
       {
          UPDT_config_flags |= UPDT_CONFIG_ERROR_UNIQUE_ID;
       }
