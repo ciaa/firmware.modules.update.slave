@@ -123,7 +123,7 @@ void UPDT_configParse(const uint8_t *payload, size_t size, UPDT_configType *info
    word = UPDT_utilsNtohl(*(ptr + 3));
    info->vendor_id = 0xFFu & (word >> 24);
    info->model_id = 0xFFFFFFu & (word);
-   
+
    #if CIAAPLATFORM_BIGENDIAN == 0
    info->unique_id_low = UPDT_utilsNtohl(*(const uint32_t *) (ptr + 4));
    info->unique_id_high = UPDT_utilsNtohl(*(const uint32_t *) (ptr + 5));
@@ -238,7 +238,7 @@ uint32_t UPDT_configSet(const uint8_t *config, size_t size)
          UPDT_config_flags |= UPDT_CONFIG_ERROR_MODEL_ID;
       }
 
-      if (UPDT_config_old.unique_id_low != UPDT_config_new.unique_id_low  || UPDT_config_old.unique_id_high != UPDT_config_new.unique_id_high )
+      if (UPDT_config_old.unique_id_low != UPDT_config_new.unique_id_low  || UPDT_config_old.unique_id_high != UPDT_config_new.unique_id_high)
       {
          UPDT_config_flags |= UPDT_CONFIG_ERROR_UNIQUE_ID;
       }
