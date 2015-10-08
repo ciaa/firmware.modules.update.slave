@@ -135,45 +135,56 @@ void UPDT_configParse(const uint8_t *payload, size_t size, UPDT_configType *info
  **/
 static void UPDT_configFormat (uint8_t *config_buffer,size_t data_size, UPDT_configType *info)
 {
-   ciaaPOSIX_assert(data_size == 28);
+   ciaaPOSIX_assert(data_size == 32);
    /*Set of the field "reserved1" in the buffer*/
-   config_buffer[0] = info->reserved1;
+   config_buffer[0] = type->reserved1;
    /*Set of the field "firmware_version" in the buffer*/
-   config_buffer[1] = (info->firmware_version) >> 16;
-   config_buffer[2] = (info->firmware_version) >> 8;
-   config_buffer[3] = info->firmware_version;
+   config_buffer[1] = (type->firmware_version) >> 16;
+   config_buffer[2] = (type->firmware_version) >> 8;
+   config_buffer[3] = type->firmware_version;
    /*Set of the field "bootloader_flags" in the buffer*/
-   config_buffer[4] = info->bootloader_flags;
+   config_buffer[4] = type->bootloader_flags;
    /*Set of the field "bootloader_version" in the buffer*/
-   config_buffer[5] = (info->bootloader_version) >> 16;
-   config_buffer[6] = (info->bootloader_version) >> 8;
-   config_buffer[7] = info->bootloader_version;
+   config_buffer[5] = (type->bootloader_version) >> 16;
+   config_buffer[6] = (type->bootloader_version) >> 8;
+   config_buffer[7] = type->bootloader_version;
    /*Set of the field "reserved2" in the buffer*/
-   config_buffer[8] = info->reserved2;
+   config_buffer[8] = type->reserved2;
    /*Set of the field "application_version" in the buffer*/
-   config_buffer[9] = (info->application_version) >> 16;
-   config_buffer[10] = (info->application_version) >> 8;
-   config_buffer[11] = info->application_version;
+   config_buffer[9] = (type->application_version) >> 16;
+   config_buffer[10] = (type->application_version) >> 8;
+   config_buffer[11] = type->application_version;
    /*Set of the field "vendor_id" in the buffer*/
-   config_buffer[12] = info->vendor_id;
+   config_buffer[12] = type->vendor_id;
    /*Set of the field "model_id" in the buffer*/
-   config_buffer[13] = (info->model_id) >> 16;
-   config_buffer[14] = (info->model_id) >> 8;
-   config_buffer[15] = info->model_id;
+   config_buffer[13] = (type->model_id) >> 16;
+   config_buffer[14] = (type->model_id) >> 8;
+   config_buffer[15] = type->model_id;
    /*Set of the field "unique_id" in the buffer*/
-   config_buffer[16] = (info->unique_id) >> 56;
-   config_buffer[17] = (info->unique_id) >> 48;
-   config_buffer[18] = (info->unique_id) >> 40;
-   config_buffer[19] = (info->unique_id) >> 32;
-   config_buffer[20] = (info->unique_id) >> 24;
-   config_buffer[21] = (info->unique_id) >> 16;
-   config_buffer[22] = (info->unique_id) >> 8;
-   config_buffer[23] = info->unique_id;
+   #if CIAAPLATFORM_BIGENDIAN == 0
+   config_buffer[16] = (type->unique_id_L) >> 24;
+   config_buffer[17] = (type->unique_id_L) >> 16;
+   config_buffer[18] = (type->unique_id_L) >> 8;
+   config_buffer[19] =  type->unique_id_L;
+   config_buffer[20] = (type->unique_id_H) >> 24;
+   config_buffer[21] = (type->unique_id_H) >> 16;
+   config_buffer[22] = (type->unique_id_H) >> 8;
+   config_buffer[23] =  type->unique_id_H;
+   #else
+   config_buffer[16] = (type->unique_id_H) >> 24;
+   config_buffer[17] = (type->unique_id_H) >> 16;
+   config_buffer[18] = (type->unique_id_H) >> 8;
+   config_buffer[19] =  type->unique_id_H;
+   config_buffer[20] = (type->unique_id_L) >> 24;
+   config_buffer[21] = (type->unique_id_L) >> 16;
+   config_buffer[22] = (type->unique_id_L) >> 8;
+   config_buffer[23] =  type->unique_id_L;
+   #endif // CIAAPLATFORM_BIGENDIAN
    /*Set of the field "data_size" in the buffer*/
-   config_buffer[24] = (info->data_size) >> 24;
-   config_buffer[25] = (info->data_size) >> 16;
-   config_buffer[26] = (info->data_size) >> 8;
-   config_buffer[27] = info->data_size;
+   config_buffer[24] = (type->data_size) >> 24;
+   config_buffer[25] = (type->data_size) >> 16;
+   config_buffer[26] = (type->data_size) >> 8;
+   config_buffer[27] = type->data_size;
 }
 /*==================[external functions definition]==========================*/
 
