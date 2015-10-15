@@ -61,7 +61,7 @@
 #include "ciaaPOSIX_assert.h"
 #include "ciaaPOSIX_stdlib.h"
 #include "UPDT_unpacker.h"
-#include "UPDT_utils.h"
+#include "ciaaLibs_Endianess.h"
 
 /*==================[macros and definitions]=================================*/
 
@@ -141,7 +141,7 @@ uint8_t *UPDT_unpackerExtract(
          unpacker->address = unpacker->segment_destination_address;
 
          /* set the amount of data to be extracted */
-         unpacker->size = UPDT_utilsMin(unpacker->segment_remaining_bytes, *unparsed_bytes_count);
+         unpacker->size = ciaaPOSIX_min(unpacker->segment_remaining_bytes, *unparsed_bytes_count);
 
          /* update data pointer */
          unparsed_data += unpacker->size;

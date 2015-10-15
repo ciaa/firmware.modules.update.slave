@@ -60,7 +60,7 @@
 
 /*==================[inclusions]=============================================*/
 #include "UPDT_config.h"
-#include "UPDT_utils.h"
+#include "ciaaLibs_Endianess.h"
 #include "ciaaPOSIX_stdio.h"
 #include "ciaaPOSIX_assert.h"
 #include "UPDT_services.h"
