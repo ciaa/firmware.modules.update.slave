@@ -108,30 +108,30 @@ void UPDT_configParse(const uint8_t *payload, size_t size, UPDT_configType *info
 
    ptr = (const uint32_t *) payload;
 
-   word = UPDT_utilsNtohl(*ptr);
+   word = ciaaLibs_utilsNtohl(*ptr);
    info->reserved1 = 0xFFu & (word >> 24);
    info->firmware_version = 0xFFFFFFu & (word);
 
-   word = UPDT_utilsNtohl(*(ptr + 1));
+   word = ciaaLibs_utilsNtohl(*(ptr + 1));
    info->bootloader_flags = 0xFFu & (word >> 24);
    info->bootloader_version = 0xFFFFFFu & (word);
 
-   word = UPDT_utilsNtohl(*(ptr + 2));
+   word = ciaaLibs_utilsNtohl(*(ptr + 2));
    info->reserved2 = 0xFFu & (word >> 24);
    info->application_version = 0xFFFFFFu & (word);
 
-   word = UPDT_utilsNtohl(*(ptr + 3));
+   word = ciaaLibs_utilsNtohl(*(ptr + 3));
    info->vendor_id = 0xFFu & (word >> 24);
    info->model_id = 0xFFFFFFu & (word);
 
    #if CIAAPLATFORM_BIGENDIAN == 0
-   info->unique_id_low = UPDT_utilsNtohl(*(const uint32_t *) (ptr + 4));
-   info->unique_id_high = UPDT_utilsNtohl(*(const uint32_t *) (ptr + 5));
+   info->unique_id_low = ciaaLibs_utilsNtohl(*(ptr + 4));
+   info->unique_id_high = ciaaLibs_utilsNtohl(*(ptr + 5));
    #else
-   info->unique_id_high = UPDT_utilsNtohl(*(const uint32_t *) (ptr + 4));
-   info->unique_id_low = UPDT_utilsNtohl(*(const uint32_t *) (ptr + 5));
+   info->unique_id_high = ciaaLibs_utilsNtohl(*(const uint32_t *) (ptr + 4));
+   info->unique_id_low = ciaaLibs_utilsNtohl(*(const uint32_t *) (ptr + 5));
    #endif
-   info->data_size = UPDT_utilsNtohl(*(ptr + 6));
+   info->data_size = ciaaLibs_utilsNtohl(*(ptr + 6));
 }
 
 /** \brief UPDT_configFormat stores in a buffer, in compacted format, the parameters of to data structure
@@ -298,7 +298,7 @@ void UPDT_configClear (void)
 ssize_t UPDT_configSetResponse(uint8_t *buffer, size_t size)
 {
    UPDT_configFormat(buffer,size,&UPDT_config_old);
-   UPDT_config_flags = UPDT_utilsNtohl (UPDT_config_flags);
+   UPDT_config_flags = ciaaLibs_utilsNtohl (UPDT_config_flags);
 
    /* Concatenated flags of warning and error */
    buffer[28] = UPDT_config_flags >> 24;

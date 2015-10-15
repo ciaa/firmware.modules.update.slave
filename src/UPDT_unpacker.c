@@ -115,14 +115,14 @@ uint8_t *UPDT_unpackerExtract(
          /* then the segment address and size must be read */
 
          /* read the starting address from the first 4 bytes of the buffer */
-         unpacker->segment_destination_address = UPDT_utilsNtohl(*((uint32_t*) unparsed_data));
+         unpacker->segment_destination_address = ciaaLibs_utilsNtohl(*((uint32_t*) unparsed_data));
          /* increment data pointer */
          unparsed_data += sizeof(uint32_t);
          /* update the unparsed bytes count */
          *unparsed_bytes_count -= sizeof(uint32_t);
 
          /* read the segment size from the second 4 bytes of the buffer */
-         unpacker->segment_remaining_bytes = UPDT_utilsNtohl(*((uint32_t*) unparsed_data));
+         unpacker->segment_remaining_bytes = ciaaLibs_utilsNtohl(*((uint32_t*) unparsed_data));
          /* increment data pointer */
          unparsed_data += sizeof(uint32_t);
          /* update the unparsed bytes count */
