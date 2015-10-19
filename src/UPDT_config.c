@@ -63,6 +63,7 @@
 #include "ciaaLibs_Endianess.h"
 #include "ciaaPOSIX_stdio.h"
 #include "ciaaPOSIX_assert.h"
+#include "ciaaLibs_format.h"
 #include "UPDT_services.h"
 /*==================[macros and definitions]=================================*/
 /** \brief Flash memory address where the configuration is stored */
@@ -124,6 +125,7 @@ void UPDT_configParse(const uint8_t *payload, size_t size, UPDT_configType *info
    info->vendor_id = 0xFFu & (word >> 24);
    info->model_id = 0xFFFFFFu & (word);
 
+   //Corregir esta parte.. no deberia ir el bigendian, deberia ser una funcion esta condicion
    #if CIAAPLATFORM_BIGENDIAN == 0
    info->unique_id_low = ciaaLibs_utilsNtohl(*(ptr + 4));
    info->unique_id_high = ciaaLibs_utilsNtohl(*(ptr + 5));
@@ -143,54 +145,31 @@ static void UPDT_configFormat (uint8_t *config_buffer,size_t data_size, UPDT_con
 {
    ciaaPOSIX_assert(data_size == 32);
    /*Set of the field "reserved1" in the buffer*/
-   config_buffer[0] = type->reserved1;
+   ciaaLibs_SetByte (&config_buffer,0,(type->reserved1));
    /*Set of the field "firmware_version" in the buffer*/
-   config_buffer[1] = (type->firmware_version) >> 16;
-   config_buffer[2] = (type->firmware_version) >> 8;
-   config_buffer[3] = type->firmware_version;
+   ciaaLibs_SetUint24 (&config_buffer,1,(type->firmware_version));
    /*Set of the field "bootloader_flags" in the buffer*/
-   config_buffer[4] = type->bootloader_flags;
+   ciaaLibs_SetByte (&config_buffer,4,(type->bootloader_flags));
    /*Set of the field "bootloader_version" in the buffer*/
-   config_buffer[5] = (type->bootloader_version) >> 16;
-   config_buffer[6] = (type->bootloader_version) >> 8;
-   config_buffer[7] = type->bootloader_version;
+   ciaaLibs_SetUint24 (&config_buffer,5,(type->bootloader_version));
    /*Set of the field "reserved2" in the buffer*/
-   config_buffer[8] = type->reserved2;
+   ciaaLibs_SetByte (&config_buffer,8,(type->reserved2));
    /*Set of the field "application_version" in the buffer*/
-   config_buffer[9] = (type->application_version) >> 16;
-   config_buffer[10] = (type->application_version) >> 8;
-   config_buffer[11] = type->application_version;
+   ciaaLibs_SetUint24 (&config_buffer,9,(type->application_version));
    /*Set of the field "vendor_id" in the buffer*/
-   config_buffer[12] = type->vendor_id;
+   ciaaLibs_SetByte (&config_buffer,12,(type->vendor_id));
    /*Set of the field "model_id" in the buffer*/
-   config_buffer[13] = (type->model_id) >> 16;
-   config_buffer[14] = (type->model_id) >> 8;
-   config_buffer[15] = type->model_id;
+   ciaaLibs_SetUint24 (&config_buffer,13,(type->model_id));
    /*Set of the field "unique_id" in the buffer*/
    #if CIAAPLATFORM_BIGENDIAN == 0
-   config_buffer[16] = (type->unique_id_low) >> 24;
-   config_buffer[17] = (type->unique_id_low) >> 16;
-   config_buffer[18] = (type->unique_id_low) >> 8;
-   config_buffer[19] =  type->unique_id_low;
-   config_buffer[20] = (type->unique_id_high) >> 24;
-   config_buffer[21] = (type->unique_id_high) >> 16;
-   config_buffer[22] = (type->unique_id_high) >> 8;
-   config_buffer[23] =  type->unique_id_high;
+   ciaaLibs_SetUint32 (&config_buffer,16,(type->unique_id_low));
+   ciaaLibs_SetUint32 (&config_buffer,20,(type->unique_id_high));
    #else
-   config_buffer[16] = (type->unique_id_high) >> 24;
-   config_buffer[17] = (type->unique_id_high) >> 16;
-   config_buffer[18] = (type->unique_id_high) >> 8;
-   config_buffer[19] =  type->unique_id_high;
-   config_buffer[20] = (type->unique_id_low) >> 24;
-   config_buffer[21] = (type->unique_id_low) >> 16;
-   config_buffer[22] = (type->unique_id_low) >> 8;
-   config_buffer[23] =  type->unique_id_low;
+   ciaaLibs_SetUint32 (&config_buffer,16,(type->unique_id_high));
+   ciaaLibs_SetUint32 (&config_buffer,20,(type->unique_id_low));
    #endif // CIAAPLATFORM_BIGENDIAN
    /*Set of the field "data_size" in the buffer*/
-   config_buffer[24] = (type->data_size) >> 24;
-   config_buffer[25] = (type->data_size) >> 16;
-   config_buffer[26] = (type->data_size) >> 8;
-   config_buffer[27] = type->data_size;
+   ciaaLibs_SetUint32 (&config_buffer,24,(type->data_size));
 }
 /*==================[external functions definition]==========================*/
 
@@ -301,10 +280,7 @@ ssize_t UPDT_configSetResponse(uint8_t *buffer, size_t size)
    UPDT_config_flags = ciaaLibs_utilsNtohl (UPDT_config_flags);
 
    /* Concatenated flags of warning and error */
-   buffer[28] = UPDT_config_flags >> 24;
-   buffer[29] = UPDT_config_flags >> 16;
-   buffer[30] = UPDT_config_flags >> 8;
-   buffer[31] = UPDT_config_flags;
+   ciaaLibs_SetUint24 (&buffer,28,UPDT_config_flags);
    return 0;
 }
 /** @} doxygen end group definition */
