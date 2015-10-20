@@ -125,14 +125,9 @@ void UPDT_configParse(const uint8_t *payload, size_t size, UPDT_configType *info
    info->vendor_id = 0xFFu & (word >> 24);
    info->model_id = 0xFFFFFFu & (word);
 
-   //Corregir esta parte.. no deberia ir el bigendian, deberia ser una funcion esta condicion
-   #if CIAAPLATFORM_BIGENDIAN == 0
-   info->unique_id_low = ciaaLibs_utilsNtohl(*(ptr + 4));
-   info->unique_id_high = ciaaLibs_utilsNtohl(*(ptr + 5));
-   #else
-   info->unique_id_high = ciaaLibs_utilsNtohl(*(const uint32_t *) (ptr + 4));
-   info->unique_id_low = ciaaLibs_utilsNtohl(*(const uint32_t *) (ptr + 5));
-   #endif
+   info->unique_id_high = ciaaLibs_setHigh (*(ptr+4));
+   info->unique_id_low = ciaaLibs_setLow(*(ptr+4));
+
    info->data_size = ciaaLibs_utilsNtohl(*(ptr + 6));
 }
 
