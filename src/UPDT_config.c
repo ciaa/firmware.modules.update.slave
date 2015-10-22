@@ -140,31 +140,31 @@ static void UPDT_configFormat (uint8_t *config_buffer,size_t data_size, UPDT_con
 {
    ciaaPOSIX_assert(data_size == 32);
    /*Set of the field "reserved1" in the buffer*/
-   ciaaLibs_SetByte (&config_buffer,0,(type->reserved1));
+   ciaaLibs_SetByte (config_buffer,0,(type->reserved1));
    /*Set of the field "firmware_version" in the buffer*/
-   ciaaLibs_SetUint24 (&config_buffer,1,(type->firmware_version));
+   ciaaLibs_SetUint24 (config_buffer,1,(type->firmware_version));
    /*Set of the field "bootloader_flags" in the buffer*/
-   ciaaLibs_SetByte (&config_buffer,4,(type->bootloader_flags));
+   ciaaLibs_SetByte (config_buffer,4,(type->bootloader_flags));
    /*Set of the field "bootloader_version" in the buffer*/
-   ciaaLibs_SetUint24 (&config_buffer,5,(type->bootloader_version));
+   ciaaLibs_SetUint24 (config_buffer,5,(type->bootloader_version));
    /*Set of the field "reserved2" in the buffer*/
-   ciaaLibs_SetByte (&config_buffer,8,(type->reserved2));
+   ciaaLibs_SetByte (config_buffer,8,(type->reserved2));
    /*Set of the field "application_version" in the buffer*/
-   ciaaLibs_SetUint24 (&config_buffer,9,(type->application_version));
+   ciaaLibs_SetUint24 (config_buffer,9,(type->application_version));
    /*Set of the field "vendor_id" in the buffer*/
-   ciaaLibs_SetByte (&config_buffer,12,(type->vendor_id));
+   ciaaLibs_SetByte (config_buffer,12,(type->vendor_id));
    /*Set of the field "model_id" in the buffer*/
-   ciaaLibs_SetUint24 (&config_buffer,13,(type->model_id));
+   ciaaLibs_SetUint24 (config_buffer,13,(type->model_id));
    /*Set of the field "unique_id" in the buffer*/
    #if CIAAPLATFORM_BIGENDIAN == 0
-   ciaaLibs_SetUint32 (&config_buffer,16,(type->unique_id_low));
-   ciaaLibs_SetUint32 (&config_buffer,20,(type->unique_id_high));
+   ciaaLibs_SetUint32 (config_buffer,16,(type->unique_id_low));
+   ciaaLibs_SetUint32 (config_buffer,20,(type->unique_id_high));
    #else
-   ciaaLibs_SetUint32 (&config_buffer,16,(type->unique_id_high));
-   ciaaLibs_SetUint32 (&config_buffer,20,(type->unique_id_low));
+   ciaaLibs_SetUint32 (config_buffer,16,(type->unique_id_high));
+   ciaaLibs_SetUint32 (config_buffer,20,(type->unique_id_low));
    #endif // CIAAPLATFORM_BIGENDIAN
    /*Set of the field "data_size" in the buffer*/
-   ciaaLibs_SetUint32 (&config_buffer,24,(type->data_size));
+   ciaaLibs_SetUint32 (config_buffer,24,(type->data_size));
 }
 /*==================[external functions definition]==========================*/
 
