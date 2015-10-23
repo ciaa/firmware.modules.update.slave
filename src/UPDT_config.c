@@ -125,8 +125,8 @@ void UPDT_configParse(const uint8_t *payload, size_t size, UPDT_configType *info
    info->vendor_id = 0xFFu & (word >> 24);
    info->model_id = 0xFFFFFFu & (word);
 
-   info->unique_id_high = ciaaLibs_setHigh (*(ptr+4));
-   info->unique_id_low = ciaaLibs_setLow(*(ptr+4));
+   info->unique_id_high = ciaaLibs_setHigh (ptr+4);
+   info->unique_id_low = ciaaLibs_setLow(ptr+4);
 
    info->data_size = ciaaLibs_utilsNtohl(*(ptr + 6));
 }
