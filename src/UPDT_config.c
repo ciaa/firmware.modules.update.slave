@@ -100,7 +100,7 @@ static uint32_t UPDT_config_flags;
 
 /* payload parsing */
 /*==================[internal functions definition]==========================*/
-void UPDT_configParse(const uint8_t *payload, size_t size, UPDT_configType *info)
+static void UPDT_configParse(const uint8_t *payload, size_t size, UPDT_configType *info)
 {
    uint32_t word;
    const uint32_t *ptr;
