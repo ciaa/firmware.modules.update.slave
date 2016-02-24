@@ -1,6 +1,8 @@
 ###############################################################################
 #
-# Copyright 2014, Mariano Cerdeiro
+# Copyright 2014, ACSE & CADIEEL
+#    ACSE   : http://www.sase.com.ar/asociacion-civil-sistemas-embebidos/ciaa/
+#    CADIEEL: http://www.cadieel.org.ar
 #
 # This file is part of CIAA Firmware.
 #
@@ -31,13 +33,9 @@
 # POSSIBILITY OF SUCH DAMAGE.
 #
 ###############################################################################
-# library
-LIBS 				+= update_slave
-# library path
-update_slave_PATH 		= $(ROOT_DIR)$(DS)modules$(DS)updateSlave
-# library source path
-update_slave_SRC_PATH 	= $(update_slave_PATH)$(DS)src
-# library include path
-update_slave_INC_PATH 	= $(update_slave_PATH)$(DS)inc
-# library source files
-update_slave_SRC_FILES 	= $(wildcard $(update_slave_SRC_PATH)$(DS)*.c)
+# unit test
+# unit tests include files
+updater_TST_INC_PATH = $(modbus_PATH)$(DS)test$(DS)utest$(DS)inc
+# unit tests dependencies
+#modbus_TST_MOD	    = posix config platforms
+updater_TST_MOD	    = config bsp ciaak posix platforms modbus
